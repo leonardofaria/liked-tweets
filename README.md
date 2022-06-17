@@ -1,23 +1,25 @@
-# Next.js + Tailwind CSS Example
+# Liked Tweets
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+This is an application that shows you liked tweets outside Twitter or Tweetbot.
 
-## Deploy your own
+## Workflow
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+Pipedream -> Supabase -> Liked Tweets app
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+In Pipedream I monitor new liked tweets and send them to Supabase. The idea is persisting the data so I can easily render in the Next.js and in the future play with different ways to show data.
 
-## How to use
+The Supabase + Next.js app is based on Lee Robinson's post "[Building an Image Gallery with Next.js, Supabase, and Tailwind CSS](https://leerob.io/blog/image-gallery-supabase-tailwind-nextjs)". From Robinson's I also got the Tweet component.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+## Build With
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-# or
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
+- Pipedream
+- Next.js
+- Tailwind CSS
+- Supabase
+- Vercel
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## Todo
+
+- [] Pagination
+- [] Search
+- [] Gallery
