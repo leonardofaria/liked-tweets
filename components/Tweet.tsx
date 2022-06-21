@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { Tweet as TweetProps } from '../types';
 
 export default function Tweet({
@@ -7,21 +7,20 @@ export default function Tweet({
   id,
   author,
   media,
-  created_at,
+  tweeted_at,
   public_metrics,
   referenced_tweets
 }: TweetProps) {
   if (!author) {
     return null;
   };
-
   const authorUrl = `https://twitter.com/${author.username}`;
   const likeUrl = `https://twitter.com/intent/like?tweet_id=${id}`;
   const retweetUrl = `https://twitter.com/intent/retweet?tweet_id=${id}`;
   const replyUrl = `https://twitter.com/intent/tweet?in_reply_to=${id}`;
   const tweetUrl = `https://twitter.com/${author.username}/status/${id}`;
-  const createdAt = new Date(created_at);
-
+  const tweetedAt = new Date(tweeted_at);
+  
   const formattedText = text.replace(/https:\/\/[\n\S]+/g, '');
   const quoteTweet =
     referenced_tweets && referenced_tweets.find((t: any) => t.type === 'quoted') as TweetProps;
@@ -49,7 +48,7 @@ export default function Tweet({
               href={authorUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="author flex !no-underline"
+              className="author flex no-underline"
             >
               <span
                 className="flex items-center font-bold !text-gray-900 dark:!text-gray-100 leading-5"
@@ -72,19 +71,23 @@ export default function Tweet({
                 @{author.username}
               </span>
             </a>
-            <a
-              className="ml-3 !text-gray-500 text-sm hover:!underline"
-              href={tweetUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <time
-                title={`Time Posted: ${createdAt.toUTCString()}`}
-                dateTime={createdAt.toISOString()}
-              >
-                {format(createdAt, 'MMM d')}
-              </time>
-            </a>
+            {
+              isValid(tweetedAt) ? (
+                <a
+                  className="ml-3 !text-gray-500 text-sm hover:!underline"
+                  href={tweetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <time
+                    title={`Time Posted: ${tweetedAt?.toUTCString()}`}
+                    dateTime={tweetedAt?.toISOString()}
+                  >
+                    {tweetedAt && format(tweetedAt, 'MMM d')}
+                  </time>
+                </a>
+              ) : null
+            }
           </header>
 
           <div className="mt-4 mb-1 leading-normal whitespace-pre-wrap text-lg !text-gray-700 dark:!text-gray-300">
@@ -99,6 +102,7 @@ export default function Tweet({
               }
             >
               {media.map((m) => (
+                // TODO: support video
                  (m.type === 'photo') ? (
                   <Image
                     key={m.media_key}

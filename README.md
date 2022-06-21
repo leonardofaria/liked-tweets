@@ -20,6 +20,7 @@ The Supabase + Next.js app is based on Lee Robinson's post "[Building an Image G
 
 ## Todo
 
-- [] Pagination
+- [X] Pagination
+- [] Take care of all `// TODO`
 - [] Search
 - [] Gallery
