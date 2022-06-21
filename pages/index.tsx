@@ -17,14 +17,15 @@ type Props = {
   tweets: TweetProps[]
   count: number
   page: number
+  search?: string
 }
 
-export default function Index({ tweets, count, page }: Props) {
+export default function Index({ tweets, count, page, search }: Props) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(page);
   const onChangePage = (page: number): void => {
     setCurrentPage(page);
-    router.push(`/?page=${page}`);
+    router.push(`/?page=${page}&search=${search}`);
   };
 
   return (
@@ -48,19 +49,32 @@ export default function Index({ tweets, count, page }: Props) {
 
 Index.getLayout = getLayout;
 
-export async function getServerSideProps({ query: { page = 1, size = 10} }) {
-  const { from, to } = getPagination(page, size);
-  const { data, count } = await supabase
-    .from('tweets')
-    .select('*', { count: 'exact' })
-    .order('tweeted_at', { ascending: false })
-    .range(from, to);
-    
+export async function getServerSideProps({ query: { page = 1, size = 10, search = ''} }) {
+  const { from, to } = getPagination(page - 1, size);
+  let response;
+
+  if (search !== '') {
+    response = await supabase
+      .from('tweets')
+      .select('*', { count: 'exact' })
+      .textSearch('text', search)
+      .order('tweeted_at', { ascending: false })
+      .range(from, to);  
+  } else {
+    response = await supabase
+      .from('tweets')
+      .select('*', { count: 'exact' })
+      .order('tweeted_at', { ascending: false })
+      .range(from, to);
+  }
+  const { data, count } = response;
+
   return {
     props: {
       tweets: data,
       count: count,
       page: +page,
+      search
     },
   };
 }
